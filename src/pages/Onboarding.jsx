@@ -23,9 +23,11 @@ export default function Onboarding() {
     diet: "",
   });
 
-  const allergies = ["Peanut", "Dairy", "Soy", "Gluten", "Eggs", "Tree Nuts", "Shellfish", "Sesame"];
-  const skinTypes = ["Eczema-Prone", "Sensitive Skin", "Dry Skin", "Normal Skin"];
-  const dietGoals = ["Low Sugar", "Organic", "No Artificial Dyes", "No Preservatives", "Whole Foods"];
+  const [onboardingOptions, setOnboardingOptions] = useState({
+    allergies: ["Peanut", "Dairy", "Soy", "Gluten", "Eggs", "Tree Nuts", "Shellfish", "Sesame"],
+    skinSensitivities: ["Eczema-Prone", "Sensitive Skin", "Dry Skin", "Normal Skin"],
+    dietaryGoals: ["Low Sugar", "Organic", "No Artificial Dyes", "No Preservatives", "Whole Foods"],
+  });
 
   const toggleItem = (category, item) => {
     setProfile((prev) => ({
@@ -39,10 +41,17 @@ export default function Onboarding() {
   const addCustomItem = (category, inputKey) => {
     const value = customInputs[inputKey].trim();
     if (value && !profile[category].includes(value)) {
+      // Add to selected profile
       setProfile((prev) => ({
         ...prev,
         [category]: [...prev[category], value],
       }));
+      // Add to the list of options
+      setOnboardingOptions((prev) => ({
+        ...prev,
+        [category]: [...prev[category], value],
+      }));
+      // Clear input
       setCustomInputs((prev) => ({ ...prev, [inputKey]: "" }));
     }
   };
@@ -87,7 +96,7 @@ export default function Onboarding() {
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-2.5">
-                {allergies.map((allergy) => (
+                {onboardingOptions.allergies.map((allergy) => (
                   <Card
                     key={allergy}
                     className={`p-3 cursor-pointer transition-all border-2 ${
@@ -137,7 +146,7 @@ export default function Onboarding() {
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-2.5">
-                {skinTypes.map((skin) => (
+                {onboardingOptions.skinSensitivities.map((skin) => (
                   <Card
                     key={skin}
                     className={`p-3 cursor-pointer transition-all border-2 ${
@@ -187,7 +196,7 @@ export default function Onboarding() {
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-2.5">
-                {dietGoals.map((goal) => (
+                {onboardingOptions.dietaryGoals.map((goal) => (
                   <Card
                     key={goal}
                     className={`p-3 cursor-pointer transition-all border-2 ${
