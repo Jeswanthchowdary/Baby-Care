@@ -92,8 +92,12 @@ export default function Home() {
                       </div>
                       <div className="flex items-center gap-2">
                         <Badge
-                          variant={scan.safe ? "default" : "destructive"}
-                          className={scan.safe ? "bg-safe" : ""}
+                          variant={scan.safe ? "outline" : "destructive"}
+                          className={
+                            scan.safe
+                              ? "bg-safe-light text-safe border-safe"
+                              : ""
+                          }
                         >
                           {scan.safe ? "✓ Safe" : "⚠ Warning"}
                         </Badge>

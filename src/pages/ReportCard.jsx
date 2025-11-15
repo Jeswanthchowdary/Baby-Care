@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ArrowLeft, CheckCircle, AlertTriangle, Heart, Info } from "lucide-react";
+import placeholderImage from "@/assets/placeholder.svg";
 
 export default function ReportCard() {
   const navigate = useNavigate();
@@ -14,16 +15,16 @@ export default function ReportCard() {
 
   // Mock data
   const affiliates = [
-    { name: "Honest Company Baby Lotion", brand: "The Honest Company", grade: "A", image: "/vite.svg" },
-    { name: "Aveeno Baby Eczema Therapy", brand: "Aveeno", grade: "A", image: "/vite.svg" },
-    { name: "Burt's Bees Baby Bee", brand: "Burt's Bees", grade: "B", image: "/vite.svg" },
+    { name: "Honest Company Baby Lotion", brand: "The Honest Company", grade: "A", image: placeholderImage },
+    { name: "Aveeno Baby Eczema Therapy", brand: "Aveeno", grade: "A", image: placeholderImage },
+    { name: "Burt's Bees Baby Bee", brand: "Burt's Bees", grade: "B", image: placeholderImage },
   ];
 
   const product = {
     name: "CeraVe Baby Lotion",
     brand: "CeraVe",
     category: "Baby Lotion",
-    image: "/vite.svg",
+    image: placeholderImage,
     safetyGrade: "A",
     nutritionGrade: null,
     profileMatch: true,
@@ -191,9 +192,9 @@ export default function ReportCard() {
         {/* Affiliate Products */}
         <div>
           <h3 className="text-lg font-semibold text-foreground mb-3">Safe Alternatives</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="flex overflow-x-auto gap-4 pb-4">
             {affiliates.map((affiliate, index) => (
-              <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
+              <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow w-48 flex-shrink-0">
                 <div className="bg-muted h-32 flex items-center justify-center">
                   <img src={affiliate.image} alt={affiliate.name} className="h-24 w-24 object-contain"/>
                 </div>
