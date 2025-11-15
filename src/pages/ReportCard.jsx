@@ -8,16 +8,22 @@ import { ArrowLeft, CheckCircle, AlertTriangle, Heart, Info } from "lucide-react
 
 export default function ReportCard() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  useParams(); // Keep this to avoid breaking the app if the route expects a param, but the variable is unused.
   const [selectedIngredient, setSelectedIngredient] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
 
   // Mock data
+  const affiliates = [
+    { name: "Honest Company Baby Lotion", brand: "The Honest Company", grade: "A", image: "/vite.svg" },
+    { name: "Aveeno Baby Eczema Therapy", brand: "Aveeno", grade: "A", image: "/vite.svg" },
+    { name: "Burt's Bees Baby Bee", brand: "Burt's Bees", grade: "B", image: "/vite.svg" },
+  ];
+
   const product = {
     name: "CeraVe Baby Lotion",
     brand: "CeraVe",
     category: "Baby Lotion",
-    image: "/placeholder.svg",
+    image: "/vite.svg",
     safetyGrade: "A",
     nutritionGrade: null,
     profileMatch: true,
@@ -171,7 +177,10 @@ export default function ReportCard() {
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-medium">{ingredient.name}</span>
-                    <Info className="h-4 w-4 flex-shrink-0" />
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className={getIngredientColor(ingredient.status)}>{ingredient.status}</Badge>
+                      <Info className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                    </div>
                   </div>
                 </Card>
               </button>
@@ -179,16 +188,27 @@ export default function ReportCard() {
           </div>
         </div>
 
-        {/* Alternative Products */}
-        <Card className="p-6 bg-secondary">
-          <h3 className="font-semibold text-foreground mb-3">Looking for alternatives?</h3>
-          <p className="text-sm text-muted-foreground mb-4">
-            We found similar products with better ratings
-          </p>
-          <Button variant="default" className="w-full">
-            View Better Alternatives
-          </Button>
-        </Card>
+        {/* Affiliate Products */}
+        <div>
+          <h3 className="text-lg font-semibold text-foreground mb-3">Safe Alternatives</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {affiliates.map((affiliate, index) => (
+              <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
+                <div className="bg-muted h-32 flex items-center justify-center">
+                  <img src={affiliate.image} alt={affiliate.name} className="h-24 w-24 object-contain"/>
+                </div>
+                <div className="p-4">
+                  <h4 className="font-semibold truncate">{affiliate.name}</h4>
+                  <p className="text-xs text-muted-foreground mb-2">{affiliate.brand}</p>
+                  <div className="flex items-center justify-between">
+                    <Badge className={getGradeColor(affiliate.grade)}>{affiliate.grade}</Badge>
+                    <Button variant="ghost" size="sm">View</Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Ingredient Detail Modal */}

@@ -14,7 +14,7 @@ export default function Profile() {
   });
 
   useEffect(() => {
-    const saved = localStorage.getItem("clarity-profile");
+    const saved = localStorage.getItem("baby-care-profile");
     if (saved) {
       setProfile(JSON.parse(saved));
     }
@@ -101,10 +101,7 @@ export default function Profile() {
 
         <div className="pt-4 space-y-3">
           <Button variant="outline" className="w-full">
-            About Clarity
-          </Button>
-          <Button variant="outline" className="w-full">
-            Privacy Policy
+            About Baby Care
           </Button>
           <Button variant="outline" className="w-full text-destructive hover:text-destructive">
             Sign Out
