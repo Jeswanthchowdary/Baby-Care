@@ -14,11 +14,16 @@ export default function Profile() {
   });
 
   useEffect(() => {
-    const saved = localStorage.getItem("clarity-profile");
+    const saved = localStorage.getItem("baby-care-profile");
     if (saved) {
       setProfile(JSON.parse(saved));
     }
   }, []);
+
+  const handleSignOut = () => {
+    localStorage.removeItem("baby-care-profile");
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -101,12 +106,13 @@ export default function Profile() {
 
         <div className="pt-4 space-y-3">
           <Button variant="outline" className="w-full">
-            About Clarity
+            About Baby Care
           </Button>
-          <Button variant="outline" className="w-full">
-            Privacy Policy
-          </Button>
-          <Button variant="outline" className="w-full text-destructive hover:text-destructive">
+          <Button
+            variant="outline"
+            className="w-full text-destructive hover:text-destructive"
+            onClick={handleSignOut}
+          >
             Sign Out
           </Button>
         </div>
