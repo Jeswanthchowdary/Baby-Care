@@ -5,19 +5,32 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ArrowLeft, CheckCircle, AlertTriangle, Heart, Info } from "lucide-react";
+import placeholderImage from "@/assets/placeholder.svg";
+import aveno from "@/assets/Aveno_product_2.jpg";
+import burts from "@/assets/Burts_product_2.jpg";
+import honest from "@/assets/Honey_Product_1.jpg";
+import careve from "@/assets/careve_product.jpg";
 
 export default function ReportCard() {
   const navigate = useNavigate();
-  const { id } = useParams();
+  useParams(); // Keep this to avoid breaking the app if the route expects a param, but the variable is unused.
   const [selectedIngredient, setSelectedIngredient] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
 
   // Mock data
+  const GLOBAL_IMAGE_LINK = "https://example.com/images/";
+
+  const affiliates = [
+    { name: "Honest Company Baby Lotion", brand: "The Honest Company", grade: "A", image: honest },
+    { name: "Aveeno Baby Eczema Therapy", brand: "Aveeno", grade: "A", image: aveno },
+    { name: "Burt's Bees Baby Bee", brand: "Burt's Bees", grade: "B", image: burts },
+  ];
+
   const product = {
     name: "CeraVe Baby Lotion",
     brand: "CeraVe",
     category: "Baby Lotion",
-    image: "/placeholder.svg",
+    image: careve,
     safetyGrade: "A",
     nutritionGrade: null,
     profileMatch: true,
@@ -171,7 +184,10 @@ export default function ReportCard() {
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-medium">{ingredient.name}</span>
-                    <Info className="h-4 w-4 flex-shrink-0" />
+                    {/* <Info className="h-4 w-4 flex-shrink-0" /> */}
+                      <div className="flex items-center gap-2">
+                      <Info className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                    </div>
                   </div>
                 </Card>
               </button>
@@ -179,16 +195,31 @@ export default function ReportCard() {
           </div>
         </div>
 
-        {/* Alternative Products */}
-        <Card className="p-6 bg-secondary">
-          <h3 className="font-semibold text-foreground mb-3">Looking for alternatives?</h3>
-          <p className="text-sm text-muted-foreground mb-4">
-            We found similar products with better ratings
-          </p>
-          <Button variant="default" className="w-full">
-            View Better Alternatives
-          </Button>
-        </Card>
+        {/* Affiliate Products */}
+        <div>
+          <h3 className="text-lg font-semibold text-foreground mb-3">Safe Alternatives</h3>
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"> */}
+                    <div className="flex overflow-x-auto gap-4 pb-4">
+
+            {affiliates.map((affiliate, index) => (
+              // <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
+                              <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow w-48 flex-shrink-0">
+
+                <div className="bg-muted h-32 flex items-center justify-center">
+                  <img src={affiliate.image} alt={affiliate.name} className="h-24 w-24 object-contain"/>
+                </div>
+                <div className="p-4">
+                  <h4 className="font-semibold truncate">{affiliate.name}</h4>
+                  <p className="text-xs text-muted-foreground mb-2">{affiliate.brand}</p>
+                  <div className="flex items-center justify-between">
+                    <Badge className={getGradeColor(affiliate.grade)}>{affiliate.grade}</Badge>
+                    <Button variant="ghost" size="sm">View</Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Ingredient Detail Modal */}
