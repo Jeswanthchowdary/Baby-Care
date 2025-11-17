@@ -8,17 +8,23 @@ import { ArrowLeft, Baby, Edit, Scan, List, User } from "lucide-react";
 export default function Profile() {
   const navigate = useNavigate();
   const [profile, setProfile] = useState({
+    babyName: "Baby",
     allergies: [],
     skinSensitivities: [],
     dietaryGoals: [],
   });
 
   useEffect(() => {
-    const saved = localStorage.getItem("clarity-profile");
+    const saved = localStorage.getItem("baby-care-profile");
     if (saved) {
       setProfile(JSON.parse(saved));
     }
   }, []);
+
+  const handleSignOut = () => {
+    localStorage.removeItem("baby-care-profile");
+    navigate("/");
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -35,8 +41,8 @@ export default function Profile() {
           <div className="w-24 h-24 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
             <Baby className="w-12 h-12 text-primary" />
           </div>
-          <h2 className="text-2xl font-bold text-foreground mb-1">Baby's Profile</h2>
-          <p className="text-sm text-muted-foreground">Keep your baby's info up to date</p>
+          <h2 className="text-2xl font-bold text-foreground mb-1">{profile.babyName}'s Profile</h2>
+          <p className="text-sm text-muted-foreground">Keep {profile.babyName}'s info up to date</p>
         </div>
 
         <Card className="p-6">
@@ -101,12 +107,13 @@ export default function Profile() {
 
         <div className="pt-4 space-y-3">
           <Button variant="outline" className="w-full">
-            About Clarity
+            About Baby Care
           </Button>
-          <Button variant="outline" className="w-full">
-            Privacy Policy
-          </Button>
-          <Button variant="outline" className="w-full text-destructive hover:text-destructive">
+          <Button
+            variant="outline"
+            className="w-full text-destructive hover:text-destructive"
+            onClick={handleSignOut}
+          >
             Sign Out
           </Button>
         </div>

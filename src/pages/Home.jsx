@@ -1,29 +1,47 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { products } from "@/data/products";
 import { Badge } from "@/components/ui/badge";
-import { Scan, List, User, Clock } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Scan, List, User, Clock, Search, Bell } from "lucide-react";
 
 export default function Home() {
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchError, setSearchError] = useState("");
+
+  const handleSearch = () => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return;
+
+    const foundProduct = Object.values(products).find(
+      (p) =>
+        p.name.toLowerCase().includes(query) ||
+        p.brand.toLowerCase().includes(query)
+    );
+
+    if (foundProduct) {
+      setSearchError("");
+      navigate(`/report/${foundProduct.id}`);
+    } else {
+      setSearchError("Product not found. Please try another search.");
+    }
+  };
+
   const recentScans = [
     {
       id: 1,
-      name: "CeraVe Baby Lotion",
+      name: "Honest Company Baby Lotion",
       grade: "A",
       safe: true,
       time: "2 hours ago",
     },
     {
-      id: 2,
-      name: "Gerber Organic Puffs",
-      grade: "B",
-      safe: true,
-      time: "Yesterday",
-    },
-    {
-      id: 3,
-      name: "Johnson's Baby Shampoo",
-      grade: "C",
+      id: 2, // This now links to the unsafe product
+      name: "Johnson's Baby Powder",
+      grade: "F",
       safe: false,
       time: "2 days ago",
     },
@@ -54,20 +72,44 @@ export default function Home() {
             <h1 className="text-2xl font-bold text-foreground">Welcome back!</h1>
             <p className="text-sm text-muted-foreground">Keep your baby safe and healthy</p>
           </div>
-          <Link to="/profile">
+          <Link to="/notifications" aria-label="Notifications">
             <Button variant="ghost" size="icon" className="rounded-full">
-              <User className="h-5 w-5" />
+              <Bell className="h-5 w-5" />
             </Button>
           </Link>
         </div>
 
-        <Link to="/scanner" className="block mb-8">
+        <Link to="/scanner" className="block mb-6">
           <Card className="bg-primary text-primary-foreground p-8 text-center border-none shadow-lg">
             <Scan className="w-16 h-16 mx-auto mb-4" />
             <h2 className="text-xl font-bold mb-2">Scan a Product</h2>
             <p className="text-sm opacity-90">Tap to scan any baby product barcode</p>
           </Card>
         </Link>
+
+        <div className="mb-8">
+          <p className="text-center text-sm text-muted-foreground mb-3">
+            Or search for a product manually
+          </p>
+          <div className="flex gap-2">
+            <Input
+              type="text"
+              placeholder="e.g., 'Honest Lotion'"
+              className="flex-1"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSearch();
+              }}
+            />
+            <Button onClick={handleSearch} aria-label="Search">
+              <Search className="h-4 w-4" />
+            </Button>
+          </div>
+          {searchError && (
+            <p className="text-sm text-destructive mt-2 text-center">{searchError}</p>
+          )}
+        </div>
 
         <div className="space-y-4">
           <div className="flex justify-between items-center">
@@ -92,8 +134,12 @@ export default function Home() {
                       </div>
                       <div className="flex items-center gap-2">
                         <Badge
-                          variant={scan.safe ? "default" : "destructive"}
-                          className={scan.safe ? "bg-safe" : ""}
+                          variant={scan.safe ? "outline" : "destructive"}
+                          className={
+                            scan.safe
+                              ? "bg-safe-light text-safe-foreground border-safe"
+                              : ""
+                          }
                         >
                           {scan.safe ? "✓ Safe" : "⚠ Warning"}
                         </Badge>

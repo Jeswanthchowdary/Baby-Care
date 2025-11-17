@@ -12,10 +12,16 @@ const STEPS = 3;
 export default function Onboarding() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [profile, setProfile] = useState({
-    allergies: [],
-    skinSensitivities: [],
-    dietaryGoals: [],
+  const [profile, setProfile] = useState(() => {
+    const savedProfile = localStorage.getItem("baby-care-profile");
+    if (savedProfile) {
+      return JSON.parse(savedProfile);
+    }
+    return {
+      allergies: [],
+      skinSensitivities: [],
+      dietaryGoals: [],
+    };
   });
   const [customInputs, setCustomInputs] = useState({
     allergy: "",
@@ -23,9 +29,11 @@ export default function Onboarding() {
     diet: "",
   });
 
-  const allergies = ["Peanut", "Dairy", "Soy", "Gluten", "Eggs", "Tree Nuts", "Shellfish", "Sesame"];
-  const skinTypes = ["Eczema-Prone", "Sensitive Skin", "Dry Skin", "Normal Skin"];
-  const dietGoals = ["Low Sugar", "Organic", "No Artificial Dyes", "No Preservatives", "Whole Foods"];
+  const [onboardingOptions, setOnboardingOptions] = useState({
+    allergies: ["Peanut", "Dairy", "Soy", "Gluten", "Eggs", "Tree Nuts", "Shellfish", "Sesame"],
+    skinSensitivities: ["Eczema-Prone", "Sensitive Skin", "Dry Skin", "Normal Skin"],
+    dietaryGoals: ["Low Sugar", "Organic", "No Artificial Dyes", "No Preservatives", "Whole Foods"],
+  });
 
   const toggleItem = (category, item) => {
     setProfile((prev) => ({
@@ -39,10 +47,17 @@ export default function Onboarding() {
   const addCustomItem = (category, inputKey) => {
     const value = customInputs[inputKey].trim();
     if (value && !profile[category].includes(value)) {
+      // Add to selected profile
       setProfile((prev) => ({
         ...prev,
         [category]: [...prev[category], value],
       }));
+      // Add to the list of options
+      setOnboardingOptions((prev) => ({
+        ...prev,
+        [category]: [...prev[category], value],
+      }));
+      // Clear input
       setCustomInputs((prev) => ({ ...prev, [inputKey]: "" }));
     }
   };
@@ -51,7 +66,7 @@ export default function Onboarding() {
     if (step < STEPS) {
       setStep(step + 1);
     } else {
-      localStorage.setItem("clarity-profile", JSON.stringify(profile));
+      localStorage.setItem("baby-care-profile", JSON.stringify(profile));
       navigate("/home");
     }
   };
@@ -66,7 +81,7 @@ export default function Onboarding() {
           <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center mb-3 shadow-lg">
             <Baby className="w-9 h-9 text-primary-foreground" />
           </div>
-          <h1 className="text-2xl font-bold text-center text-foreground">Welcome to Clarity</h1>
+          <h1 className="text-2xl font-bold text-center text-foreground">Welcome to Baby Care</h1>
           <p className="text-center text-muted-foreground text-sm mt-1">
             Personalize your baby's safety profile
           </p>
@@ -87,7 +102,7 @@ export default function Onboarding() {
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-2.5">
-                {allergies.map((allergy) => (
+                {onboardingOptions.allergies.map((allergy) => (
                   <Card
                     key={allergy}
                     className={`p-3 cursor-pointer transition-all border-2 ${
@@ -137,7 +152,7 @@ export default function Onboarding() {
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-2.5">
-                {skinTypes.map((skin) => (
+                {onboardingOptions.skinSensitivities.map((skin) => (
                   <Card
                     key={skin}
                     className={`p-3 cursor-pointer transition-all border-2 ${
@@ -187,7 +202,7 @@ export default function Onboarding() {
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-2.5">
-                {dietGoals.map((goal) => (
+                {onboardingOptions.dietaryGoals.map((goal) => (
                   <Card
                     key={goal}
                     className={`p-3 cursor-pointer transition-all border-2 ${
