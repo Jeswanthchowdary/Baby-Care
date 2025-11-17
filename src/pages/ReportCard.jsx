@@ -1,59 +1,456 @@
-import { useState } from "react";
+// import { useState, useEffect } from "react";
+// import { useNavigate, useParams } from "react-router-dom";
+// import { Button } from "@/components/ui/button";
+// import { Card } from "@/components/ui/card";
+// import { Badge } from "@/components/ui/badge";
+// import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+// import { ArrowLeft, CheckCircle, AlertTriangle, Heart, Info, Users, XCircle } from "lucide-react";
+// import placeholderImage from "@/assets/placeholder.svg";
+// import aveno from "@/assets/Aveno_product_2.jpg";
+// import burts from "@/assets/Burts_product_2.jpg";
+// import honest from "@/assets/Honey_Product_1.jpg";
+// import careve from "@/assets/careve_product.jpg";
+
+
+// const products = {
+//   "1": {
+//     id: 1,
+//     name: "CeraVe Baby Lotion",
+//     brand: "CeraVe",
+//     category: "Baby Lotion",
+//     image: careve,
+//     score: 92,
+//     safetyGrade: "A",
+//     nutritionGrade: null,
+//     profileMatch: true,
+//     ingredients: [
+//       { name: "Aqua", status: "safe", description: "Water - the base of most lotions" },
+//       { name: "Glycerin", status: "safe", description: "A safe, plant-based moisturizer that's good for skin" },
+//       { name: "Cetearyl Alcohol", status: "safe", description: "A fatty alcohol that helps moisturize and soften skin" },
+//     ],
+//   },
+//   "2": {
+//     id: 2,
+//     name: "Johnson's Baby Powder",
+//     brand: "Johnson & Johnson",
+//     category: "Baby Powder",
+//     image: careve,
+//         score: 68,
+//     safetyGrade: "F",
+//     nutritionGrade: null,
+//     profileMatch: false,
+//     ingredients: [
+//         { name: "Talc", status: "avoid", description: "May contain asbestos, a known carcinogen." },
+//         { name: "Fragrance", status: "avoid", description: "A common allergen and can hide harmful chemicals." },
+//     ],
+//   },
+// };
+
+// export default function ReportCard() {
+//   const navigate = useNavigate();
+//   const { id } = useParams();
+//   const product = products[id];
+
+//   const [selectedIngredient, setSelectedIngredient] = useState(null);
+//   const [isSaved, setIsSaved] = useState(false);
+//   const [isComparing, setIsComparing] = useState(false);
+//   const [warningMessage, setWarningMessage] = useState("Contains ingredients that may not be suitable");
+
+//   useEffect(() => {
+//     if (product) {
+//         const savedProfile = localStorage.getItem("baby-care-profile");
+//         if (savedProfile) {
+//           const profile = JSON.parse(savedProfile);
+//           const ingredients = product.ingredients.map(i => i.name.toLowerCase());
+          
+//           const allergyMatch = profile.allergies.find(a => ingredients.includes(a.toLowerCase()));
+//           if (allergyMatch) {
+//             setWarningMessage(`Contains an ingredient (${allergyMatch}) that does not match your baby's allergy profile.`);
+//             return;
+//           }
+          
+//           const sensitivityMatch = profile.skinSensitivities.find(s => ingredients.includes(s.toLowerCase()));
+//            if (sensitivityMatch) {
+//             setWarningMessage(`Contains an ingredient (${sensitivityMatch}) that may not be suitable for sensitive skin.`);
+//             return;
+//           }
+//         }
+//     }
+//   }, [product]);
+
+//   // Mock data
+//   const affiliates = [
+//     { name: "Honest Company Baby Lotion", brand: "The Honest Company", grade: "A", image: honest },
+//     { name: "Aveeno Baby Eczema Therapy", brand: "Aveeno", grade: "A", image: aveno },
+//     { name: "Burt's Bees Baby Bee", brand: "Burt's Bees", grade: "B", image: burts },
+//   ];
+
+//   if (!product) {
+//     return (
+//         <div className="flex flex-col items-center justify-center min-h-screen">
+//             <h1 className="text-2xl font-bold mb-4">Product not found</h1>
+//             <Button onClick={() => navigate('/home')}>Go to Home</Button>
+//         </div>
+//     );
+//   }
+
+//   const getGradeColor = (grade) => {
+//     switch (grade) {
+//       case "A":
+//         return "bg-grade-a";
+//       case "B":
+//         return "bg-grade-b";
+//       case "C":
+//         return "bg-grade-c";
+//       case "D":
+//         return "bg-grade-d";
+//       case "F":
+//         return "bg-grade-f";
+//       default:
+//         return "bg-muted";
+//     }
+//   };
+
+//   const getIngredientColor = (status) => {
+//     switch (status) {
+//       case "safe":
+//         return "bg-safe-light text-safe-foreground border-safe";
+//       case "caution":
+//         return "bg-warning-light text-warning-foreground border-warning";
+//       case "avoid":
+//         return "bg-danger-light text-danger-foreground border-danger";
+//       default:
+//         return "bg-muted text-foreground border-border";
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen bg-background">
+//       <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-card sticky top-0 z-10">
+//         <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+//           <ArrowLeft className="h-5 w-5" />
+//         </Button>
+//         <h1 className="text-lg font-semibold">Report Card</h1>
+//         <Button
+//           variant="ghost"
+//           size="icon"
+//           onClick={() => setIsSaved(!isSaved)}
+//           className={isSaved ? "text-danger" : ""}
+//         >
+//           <Heart className={`h-5 w-5 ${isSaved ? "fill-current" : ""}`} />
+//         </Button>
+//       </div>
+
+//       <div className="px-6 py-6 space-y-6">
+//         {/* Product Header */}
+//         <div className="text-center">
+//           <div className="w-32 h-32 mx-auto mb-4 bg-muted rounded-2xl flex items-center justify-center">
+//             <img src={product.image} alt={product.name} className="w-24 h-24 object-contain" />
+//           </div>
+//           <h2 className="text-2xl font-bold text-foreground mb-1">{product.name}</h2>
+//           <p className="text-sm text-muted-foreground">{product.brand}</p>
+//         </div>
+
+//         {/* Profile Match */}
+//         <Card
+//           className={`p-6 border-2 ${
+//             product.profileMatch
+//               ? "bg-safe-light border-safe"
+//               : "bg-danger-light border-danger"
+//           }`}
+//         >
+//           <div className="flex items-center gap-3">
+//             {product.profileMatch ? (
+//               <CheckCircle className="w-8 h-8 text-safe flex-shrink-0" />
+//             ) : (
+//               <AlertTriangle className="w-8 h-8 text-danger flex-shrink-0" />
+//             )}
+//             <div>
+//               <h3 className="font-bold text-lg mb-1">
+//                 {product.profileMatch ? "SAFE for your baby!" : "WARNING"}
+//               </h3>
+//               <p className="text-sm">
+//                 {product.profileMatch
+//                   ? "This product matches your baby's profile"
+//                   : warningMessage}
+//               </p>
+//             </div>
+//           </div>
+//         </Card>
+
+//         {/* Action Buttons */}
+//         {/* <div className="grid grid-cols-2 gap-4">
+//             <Button variant="outline">
+//                 <CheckCircle className="w-4 h-4 mr-2" />
+//                 Save to Safe List
+//             </Button>
+//             <Button variant="outline">
+//                 <XCircle className="w-4 h-4 mr-2" />
+//                 Add to Avoid List
+//             </Button>
+//         </div> */}
+//          {/* Product Score */}
+//         <Card className="p-6">
+//           <div className="flex justify-between items-center mb-2">
+//             <h3 className="text-lg font-semibold">Product Score</h3>
+//             <span className="text-2xl font-bold">{product.score}/100</span>
+//           </div>
+//           <Progress value={product.score} className="w-full" />
+//           <div className="grid grid-cols-2 gap-4 mt-6">
+//             <Button variant="outline">
+//               <CheckCircle className="w-4 h-4 mr-2" />
+//               Save to Safe List
+//             </Button>
+//             <Button variant="outline">
+//               <XCircle className="w-4 h-4 mr-2" />
+//               Add to Avoid List
+//             </Button>
+//           </div>
+// </Card>
+//         {/* Grades
+//         <div className="grid grid-cols-2 gap-4">
+//           <Card className="p-4 text-center">
+//             <p className="text-xs text-muted-foreground mb-2 uppercase">Safety Score</p>
+//             <div
+//               className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl font-bold text-white ${getGradeColor(
+//                 product.safetyGrade
+//               )}`}
+//             >
+//               {product.safetyGrade}
+//             </div>
+//             <p className="text-xs text-muted-foreground mt-2">Excellent</p>
+//           </Card>
+//           {product.nutritionGrade && (
+//             <Card className="p-4 text-center">
+//               <p className="text-xs text-muted-foreground mb-2 uppercase">Nutrition Score</p>
+//               <div
+//                 className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl font-bold text-white ${getGradeColor(
+//                   product.nutritionGrade
+//                 )}`}
+//               >
+//                 {product.nutritionGrade}
+//               </div>
+//               <p className="text-xs text-muted-foreground mt-2">Very Good</p>
+//             </Card>
+//           )}
+//         </div> */}
+
+//         {/* Ingredients */}
+//         <div>
+//           <h3 className="text-lg font-semibold text-foreground mb-3">Ingredients Breakdown</h3>
+//           <div className="space-y-2">
+//             {product.ingredients.map((ingredient, index) => (
+//               <button
+//                 key={index}
+//                 onClick={() => setSelectedIngredient(ingredient.name)}
+//                 className="w-full"
+//               >
+//                 <Card
+//                   className={`p-3 text-left hover:shadow-md transition-shadow border ${getIngredientColor(
+//                     ingredient.status
+//                   )}`}
+//                 >
+//                   <div className="flex items-center justify-between">
+//                     <span className="font-medium">{ingredient.name}</span>
+//                     <div className="flex items-center gap-2">
+//                       <Badge
+//                         variant="outline"
+//                         className={getIngredientColor(ingredient.status)}
+//                       >
+//                         {ingredient.status}
+//                       </Badge>
+//                       <Info className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+//                     </div>
+//                   </div>
+//                 </Card>
+//               </button>
+//             ))}
+//           </div>
+//         </div>
+
+//         {/* Affiliate Products */}
+//         <div>
+//           <div className="flex justify-between items-center mb-3">
+//             <h3 className="text-lg font-semibold text-foreground">Safe Alternatives</h3>
+//             <Button variant="ghost" size="sm" onClick={() => setIsComparing(true)}>
+//               <Users className="h-4 w-4 mr-2" />
+//               Compare
+//             </Button>
+//           </div>
+//           <div className="flex overflow-x-auto gap-4 pb-4">
+//             {affiliates.map((affiliate, index) => (
+//               <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow w-48 flex-shrink-0">
+//                 <div className="bg-muted h-32 flex items-center justify-center">
+//                   <img src={affiliate.image} alt={affiliate.name} className="h-24 w-24 object-contain"/>
+//                 </div>
+//                 <div className="p-4">
+//                   <h4 className="font-semibold truncate">{affiliate.name}</h4>
+//                   <p className="text-xs text-muted-foreground mb-2">{affiliate.brand}</p>
+//                   <div className="flex items-center justify-between">
+//                     <Badge className={getGradeColor(affiliate.grade)}>{affiliate.grade}</Badge>
+//                     <Button variant="ghost" size="sm">View</Button>
+//                   </div>
+//                 </div>
+//               </Card>
+//             ))}
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Ingredient Detail Modal */}
+//       <Dialog open={!!selectedIngredient} onOpenChange={() => setSelectedIngredient(null)}>
+//         <DialogContent>
+//           <DialogHeader>
+//             <DialogTitle>{selectedIngredient}</DialogTitle>
+//           </DialogHeader>
+//           <div className="space-y-4">
+//             {selectedIngredient && (
+//               <>
+//                 <Badge
+//                   className={getIngredientColor(
+//                     product.ingredients.find((i) => i.name === selectedIngredient)?.status || ""
+//                   )}
+//                 >
+//                   {product.ingredients.find((i) => i.name === selectedIngredient)?.status.toUpperCase()}
+//                 </Badge>
+//                 <p className="text-sm text-foreground">
+//                   {product.ingredients.find((i) => i.name === selectedIngredient)?.description}
+//                 </p>
+//               </>
+//             )}
+//           </div>
+//         </DialogContent>
+//       </Dialog>
+
+//       {/* Comparison Modal */}
+//       <Dialog open={isComparing} onOpenChange={() => setIsComparing(false)}>
+//         <DialogContent className="max-w-md">
+//           <DialogHeader>
+//             <DialogTitle>Compare Products</DialogTitle>
+//           </DialogHeader>
+//           <div className="space-y-4">
+//             <div className="grid grid-cols-2 gap-4 text-center">
+//                 <div>
+//                     <p className="font-bold">{product.name}</p>
+//                     <p className="text-sm text-muted-foreground mb-2">(Current)</p>
+//                     <Badge className={getGradeColor(product.safetyGrade)}>{product.safetyGrade}</Badge>
+//                 </div>
+//                 {affiliates.slice(0, 1).map((affiliate) => (
+//                     <div key={affiliate.name}>
+//                         <p className="font-bold">{affiliate.name}</p>
+//                         <p className="text-sm text-muted-foreground mb-2">(Alternative)</p>
+//                         <Badge className={getGradeColor(affiliate.grade)}>{affiliate.grade}</Badge>
+//                     </div>
+//                 ))}
+//             </div>
+//           </div>
+//         </DialogContent>
+//       </Dialog>
+//     </div>
+//   );
+// }
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ArrowLeft, CheckCircle, AlertTriangle, Heart, Info } from "lucide-react";
-import placeholderImage from "@/assets/placeholder.svg";
+import { ArrowLeft, CheckCircle, AlertTriangle, Heart, Info, Users, XCircle } from "lucide-react";
 import aveno from "@/assets/Aveno_product_2.jpg";
 import burts from "@/assets/Burts_product_2.jpg";
 import honest from "@/assets/Honey_Product_1.jpg";
 import careve from "@/assets/careve_product.jpg";
 
+
+const products = {
+  "1": {
+    id: 1,
+    name: "CareVe Baby Lotion",
+    brand: "CareVe",
+    category: "Baby Lotion",
+    image: careve,
+    safetyGrade: "A",
+    score: 92,
+    nutritionGrade: null,
+    profileMatch: true,
+    ingredients: [
+      { name: "Glycerin", status: "safe", description: "A safe, plant-based moisturizer that's good for skin" },
+      { name: "Cetearyl Alcohol", status: "safe", description: "A fatty alcohol that helps moisturize and soften skin" },
+      { name: "Petrolatum", status: "safe", description: "Skin protectant that locks in moisture; commonly used in baby products." },
+      { name: "Dimethicone", status: "safe", description: "A silicone that protects the skin barrier and prevents moisture loss." },
+      { name: "Caprylic/Capric Triglyceride", status: "safe", description: "A coconut-derived skin-conditioning ingredient." },
+      
+    ],
+  },
+  "2": {
+    id: 2,
+    name: "Johnson's Baby Powder",
+    brand: "Johnson & Johnson",
+    category: "Baby Powder",
+    image: careve,
+    safetyGrade: "C",
+    score: 68,
+    nutritionGrade: null,
+    profileMatch: false,
+    ingredients: [
+        { name: "Talc", status: "avoid", description: "May contain asbestos, a known carcinogen." },
+        { name: "Fragrance", status: "avoid", description: "A common allergen and can hide harmful chemicals." },
+         { name: "Tricalcium Phosphate", status: "safe", description: "Helps absorb moisture; alternative to talc in some powders." },
+      { name: "Magnesium Carbonate", status: "caution", description: "Absorbent mineral; inhalation may irritate lungs." },
+      { name: "Zinc Stearate", status: "caution", description: "A powder that helps keep skin dry; can irritate when inhaled." }
+    
+    ],
+  },
+};
+
 export default function ReportCard() {
   const navigate = useNavigate();
-  useParams(); // Keep this to avoid breaking the app if the route expects a param, but the variable is unused.
+  const { id } = useParams();
+  const product = products[id];
+
   const [selectedIngredient, setSelectedIngredient] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
+  const [isComparing, setIsComparing] = useState(false);
+  const [warningMessage, setWarningMessage] = useState("Contains ingredients that may not be suitable");
+
+  useEffect(() => {
+    if (product) {
+        const savedProfile = localStorage.getItem("baby-care-profile");
+        if (savedProfile) {
+          const profile = JSON.parse(savedProfile);
+          const ingredients = product.ingredients.map(i => i.name.toLowerCase());
+          
+          const allergyMatch = profile.allergies.find(a => ingredients.includes(a.toLowerCase()));
+          if (allergyMatch) {
+            setWarningMessage(`Contains an ingredient (${allergyMatch}) that does not match your baby's allergy profile.`);
+            return;
+          }
+          
+          const sensitivityMatch = profile.skinSensitivities.find(s => ingredients.includes(s.toLowerCase()));
+           if (sensitivityMatch) {
+            setWarningMessage(`Contains an ingredient (${sensitivityMatch}) that may not be suitable for sensitive skin.`);
+            return;
+          }
+        }
+    }
+  }, [product]);
 
   // Mock data
-  const GLOBAL_IMAGE_LINK = "https://example.com/images/";
-
   const affiliates = [
     { name: "Honest Company Baby Lotion", brand: "The Honest Company", grade: "A", image: honest },
     { name: "Aveeno Baby Eczema Therapy", brand: "Aveeno", grade: "A", image: aveno },
     { name: "Burt's Bees Baby Bee", brand: "Burt's Bees", grade: "B", image: burts },
   ];
 
-  const product = {
-    name: "CeraVe Baby Lotion",
-    brand: "CeraVe",
-    category: "Baby Lotion",
-    image: careve,
-    safetyGrade: "A",
-    nutritionGrade: null,
-    profileMatch: true,
-    warnings: [],
-    ingredients: [
-      { name: "Aqua", status: "safe", description: "Water - the base of most lotions" },
-      {
-        name: "Glycerin",
-        status: "safe",
-        description: "A safe, plant-based moisturizer that's good for skin",
-      },
-      {
-        name: "Cetearyl Alcohol",
-        status: "safe",
-        description: "A fatty alcohol that helps moisturize and soften skin",
-      },
-      {
-        name: "Phenoxyethanol",
-        status: "caution",
-        description: "A preservative. Generally safe in small amounts, but may irritate sensitive skin",
-      },
-    ],
-  };
+  if (!product) {
+    return (
+        <div className="flex flex-col items-center justify-center min-h-screen">
+            <h1 className="text-2xl font-bold mb-4">Product not found</h1>
+            <Button onClick={() => navigate('/home')}>Go to Home</Button>
+        </div>
+    );
+  }
 
   const getGradeColor = (grade) => {
     switch (grade) {
@@ -75,11 +472,11 @@ export default function ReportCard() {
   const getIngredientColor = (status) => {
     switch (status) {
       case "safe":
-        return "bg-safe-light text-safe border-safe";
+        return "bg-safe-light text-safe-foreground border-safe";
       case "caution":
-        return "bg-warning-light text-warning border-warning";
+        return "bg-warning-light text-warning-foreground border-warning";
       case "avoid":
-        return "bg-danger-light text-danger border-danger";
+        return "bg-danger-light text-danger-foreground border-danger";
       default:
         return "bg-muted text-foreground border-border";
     }
@@ -133,39 +530,30 @@ export default function ReportCard() {
               <p className="text-sm">
                 {product.profileMatch
                   ? "This product matches your baby's profile"
-                  : "Contains ingredients that may not be suitable"}
+                  : warningMessage}
               </p>
             </div>
           </div>
         </Card>
 
-        {/* Grades */}
-        <div className="grid grid-cols-2 gap-4">
-          <Card className="p-4 text-center">
-            <p className="text-xs text-muted-foreground mb-2 uppercase">Safety Score</p>
-            <div
-              className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl font-bold text-white ${getGradeColor(
-                product.safetyGrade
-              )}`}
-            >
-              {product.safetyGrade}
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">Excellent</p>
-          </Card>
-          {product.nutritionGrade && (
-            <Card className="p-4 text-center">
-              <p className="text-xs text-muted-foreground mb-2 uppercase">Nutrition Score</p>
-              <div
-                className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl font-bold text-white ${getGradeColor(
-                  product.nutritionGrade
-                )}`}
-              >
-                {product.nutritionGrade}
-              </div>
-              <p className="text-xs text-muted-foreground mt-2">Very Good</p>
-            </Card>
-          )}
-        </div>
+        {/* Product Score */}
+        <Card className="p-6">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="text-lg font-semibold">Product Score</h3>
+            <span className="text-2xl font-bold">{product.score}/100</span>
+          </div>
+          <Progress value={product.score} className="w-full" />
+          <div className="grid grid-cols-2 gap-4 mt-6">
+            <Button variant="outline">
+              <CheckCircle className="w-4 h-4 mr-2" />
+              Save to Safe List
+            </Button>
+            <Button variant="outline">
+              <XCircle className="w-4 h-4 mr-2" />
+              Add to Avoid List
+            </Button>
+          </div>
+        </Card>
 
         {/* Ingredients */}
         <div>
@@ -184,8 +572,13 @@ export default function ReportCard() {
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-medium">{ingredient.name}</span>
-                    {/* <Info className="h-4 w-4 flex-shrink-0" /> */}
-                      <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        variant="outline"
+                        className={getIngredientColor(ingredient.status)}
+                      >
+                        {ingredient.status}
+                      </Badge>
                       <Info className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
                     </div>
                   </div>
@@ -197,14 +590,16 @@ export default function ReportCard() {
 
         {/* Affiliate Products */}
         <div>
-          <h3 className="text-lg font-semibold text-foreground mb-3">Safe Alternatives</h3>
-          {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"> */}
-                    <div className="flex overflow-x-auto gap-4 pb-4">
-
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="text-lg font-semibold text-foreground">Safe Alternatives</h3>
+            <Button variant="ghost" size="sm" onClick={() => setIsComparing(true)}>
+              <Users className="h-4 w-4 mr-2" />
+              Compare
+            </Button>
+          </div>
+          <div className="flex overflow-x-auto gap-4 pb-4">
             {affiliates.map((affiliate, index) => (
-              // <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
-                              <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow w-48 flex-shrink-0">
-
+              <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow w-48 flex-shrink-0">
                 <div className="bg-muted h-32 flex items-center justify-center">
                   <img src={affiliate.image} alt={affiliate.name} className="h-24 w-24 object-contain"/>
                 </div>
@@ -246,6 +641,32 @@ export default function ReportCard() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Comparison Modal */}
+      <Dialog open={isComparing} onOpenChange={() => setIsComparing(false)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Compare Products</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4 text-center">
+                <div>
+                    <p className="font-bold">{product.name}</p>
+                    <p className="text-sm text-muted-foreground mb-2">(Current)</p>
+                    <Badge className={getGradeColor(product.safetyGrade)}>{product.safetyGrade}</Badge>
+                </div>
+                {affiliates.slice(0, 1).map((affiliate) => (
+                    <div key={affiliate.name}>
+                        <p className="font-bold">{affiliate.name}</p>
+                        <p className="text-sm text-muted-foreground mb-2">(Alternative)</p>
+                        <Badge className={getGradeColor(affiliate.grade)}>{affiliate.grade}</Badge>
+                    </div>
+                ))}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
+

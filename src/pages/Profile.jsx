@@ -8,6 +8,7 @@ import { ArrowLeft, Baby, Edit, Scan, List, User } from "lucide-react";
 export default function Profile() {
   const navigate = useNavigate();
   const [profile, setProfile] = useState({
+    babyName: "Baby",
     allergies: [],
     skinSensitivities: [],
     dietaryGoals: [],
@@ -19,11 +20,11 @@ export default function Profile() {
       setProfile(JSON.parse(saved));
     }
   }, []);
-   const handleSignOut = () => {
+
+  const handleSignOut = () => {
     localStorage.removeItem("baby-care-profile");
     navigate("/");
   };
-
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -40,8 +41,8 @@ export default function Profile() {
           <div className="w-24 h-24 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
             <Baby className="w-12 h-12 text-primary" />
           </div>
-          <h2 className="text-2xl font-bold text-foreground mb-1">Baby's Profile</h2>
-          <p className="text-sm text-muted-foreground">Keep your baby's info up to date</p>
+          <h2 className="text-2xl font-bold text-foreground mb-1">{profile.babyName}'s Profile</h2>
+          <p className="text-sm text-muted-foreground">Keep {profile.babyName}'s info up to date</p>
         </div>
 
         <Card className="p-6">
@@ -108,11 +109,7 @@ export default function Profile() {
           <Button variant="outline" className="w-full">
             About Baby Care
           </Button>
-          <Button variant="outline" className="w-full">
-            Privacy Policy
-          </Button>
-          {/* <Button variant="outline" className="w-full text-destructive hover:text-destructive"> */}
-              <Button
+          <Button
             variant="outline"
             className="w-full text-destructive hover:text-destructive"
             onClick={handleSignOut}

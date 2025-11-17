@@ -12,10 +12,16 @@ const STEPS = 3;
 export default function Onboarding() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [profile, setProfile] = useState({
-    allergies: [],
-    skinSensitivities: [],
-    dietaryGoals: [],
+  const [profile, setProfile] = useState(() => {
+    const savedProfile = localStorage.getItem("baby-care-profile");
+    if (savedProfile) {
+      return JSON.parse(savedProfile);
+    }
+    return {
+      allergies: [],
+      skinSensitivities: [],
+      dietaryGoals: [],
+    };
   });
   const [customInputs, setCustomInputs] = useState({
     allergy: "",
