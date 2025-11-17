@@ -8,7 +8,7 @@ import ReportCard from "./pages/ReportCard";
 import Lists from "./pages/Lists";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
-import OnboardingName from "./pages/OnboardingName";
+import OnboardingName from "./pages/onboardingName";
 import Notifications from "./pages/Notifications";
 
 const queryClient = new QueryClient();
